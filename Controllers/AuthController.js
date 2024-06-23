@@ -113,23 +113,29 @@ const register = async (req, res) => {
 };
 
 const getUser = async (req, res) => {
-  const { userId } = req.body;
   try {
-    const user = await User.findById(userId);
+    const user = await User.findById(req.body.userId);
+    console.log("🚀 ~ getUser ~ user:", user);
     if (!user) {
-      return res
-        .status(404)
-        .json({ message: "Kullanıcı bulunamadı", success: false });
+      return res.status(404).json({
+        message: "Kullanıcı bulunamadı",
+        success: false,
+      });
     } else {
-      return res.status(200).json({
-        message: "Kullanıcı bilgileri getirildi",
-        user,
+      res.status(200).json({
+        message: "Kullanıcı bulundu",
+        data: {
+          user: user,
+        },
         success: true,
       });
     }
   } catch (error) {
-    console.log("🚀 ~ getUser ~ error:", error);
-    res.status(500).json({ message: "Internal Server Error" });
+    console.log("🚀 ~ authControllers ~ error:", error);
+    res.status(500).send({
+      success: false,
+      message: "Yetkiniz yok",
+    });
   }
 };
 

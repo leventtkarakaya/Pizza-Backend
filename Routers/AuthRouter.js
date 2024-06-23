@@ -10,6 +10,6 @@ routers = express.Router();
 
 routers.post("/login", login);
 routers.post("/register", register);
-routers.post("/getUser", getUser);
+routers.post("/get-user", getUser);
 
 module.exports = routers;

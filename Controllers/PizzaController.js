@@ -13,6 +13,7 @@ const createPizza = async (req, res) => {
       smallPrice,
       mediumPrice,
       largePrice,
+      category,
     } = req.body;
     const newPizza = new Pizza({
       name,
@@ -23,6 +24,7 @@ const createPizza = async (req, res) => {
       smallPrice,
       mediumPrice,
       largePrice,
+      category,
     });
     const pizza = await newPizza.save();
     return res
@@ -30,19 +32,15 @@ const createPizza = async (req, res) => {
       .json({ message: "Pizza oluşturuldu", pizza, success: true });
   } catch (error) {
     console.log("🚀 ~ createPizza ~ error:", error);
-    res.status(500).json({ message: "Internal Server Error" });
+    res.status(500).json({ message: error.message });
   }
 };
 
 const getPizza = async (req, res) => {
-  const { id } = req.params;
   try {
+    const { id } = req.params;
+    console.log("🚀 ~ getPizza ~ id:", id);
     const pizza = await Pizza.findById(id);
-    if (!pizza) {
-      return res
-        .status(404)
-        .json({ message: "Pizza bulunamadı", success: false });
-    }
     if (pizza === null) {
       return res
         .status(404)
@@ -57,15 +55,15 @@ const getPizza = async (req, res) => {
 
 const getPizzas = async (req, res) => {
   try {
-    const pizzas = await Pizza.find();
-    if (!pizzas) {
+    const pizza = await Pizza.find();
+    if (!pizza) {
       return res
         .status(404)
         .json({ message: "Pizza bulunamadı", success: false });
     }
-    return res
+    res
       .status(200)
-      .json({ pizzas, success: true, message: "Pizzalar getirildi" });
+      .json({ pizza, success: true, message: "Pizzalar getirildi" });
   } catch (error) {
     console.log("🚀 ~ getPizzas ~ error:", error);
     res.status(500).json({ message: "getPizzas hata" });
@@ -131,4 +129,36 @@ const updatePizza = async (req, res) => {
   }
 };
 
-module.exports = { createPizza, getPizza, getPizzas, deletePizza, updatePizza };
+const categoryPizza = async (req, res) => {
+  try {
+    const { category } = req.query;
+    if (category === "Hepsi") {
+      const pizza = await Pizza.find();
+      console.log("🚀 ~ categoryPizza ~ pizza:", pizza);
+      res.status(200).json({
+        message: "Yemeklerin Hepsi Geterildi",
+        success: true,
+        pizza,
+      });
+    } else {
+      const pizza = await Pizza.find({ category });
+      res.status(200).json({
+        message: "Yemeklerin Geterildi",
+        success: true,
+        pizza,
+      });
+    }
+  } catch (error) {
+    console.log("🚀 ~ categoryPizza ~ error:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+module.exports = {
+  createPizza,
+  getPizza,
+  getPizzas,
+  deletePizza,
+  updatePizza,
+  categoryPizza,
+};

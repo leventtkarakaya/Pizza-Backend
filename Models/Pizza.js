@@ -1,4 +1,3 @@
-const validator = require("validator");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 
@@ -10,32 +9,23 @@ const Pizza = new mongoose.Schema(
       type: String,
       required: true,
     },
-    ingredients: {
-      type: [String],
-      required: true,
-    },
-    price: {
-      type: Number,
-      required: true,
-    },
     image: {
       type: String,
-      required: true,
     },
     description: {
       type: String,
       required: true,
     },
     smallPrice: {
-      type: Number,
+      type: String,
       required: true,
     },
     mediumPrice: {
-      type: Number,
+      type: String,
       required: true,
     },
     largePrice: {
-      type: Number,
+      type: String,
       required: true,
     },
     category: {
@@ -45,12 +35,8 @@ const Pizza = new mongoose.Schema(
   },
   {
     timestamps: true,
-    toJSON: {
-      virtuals: true,
-    },
-    toObject: {
-      virtuals: true,
-    },
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
     versionKey: false,
   }
 );

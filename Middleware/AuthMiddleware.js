@@ -1,26 +1,36 @@
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
+
 dotenv.config();
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
-const AuthMiddleware = async (req, res, next) => {
-  const { authorization } = req.headers;
-  console.log("🚀 ~ AuthMiddleware ~ authorization:", authorization);
-  if (!authorization) {
-    return res.status(401).json({ message: "Unauthorized" });
-  }
-  const token = authorization.split(" ")[1];
-  if (!token) {
-    return res.status(401).json({ message: "Unauthorized" });
-  }
-  const decoded = jwt.verify(token, JWT_SECRET);
-  if (decoded) {
-    req.body.userId = decoded.userId;
-    next();
-  } else {
-    return res.status(401).json({ message: "Unauthorized" });
+const protect = async (req, res, next) => {
+  try {
+    if (!req.headers.authorization) {
+      return res.status(401).send({
+        message: "Authorization header is missing",
+        success: false,
+      });
+    }
+    const token = req.headers["authorization"].split(" ")[1];
+    const decoded = jwt.verify(token, JWT_SECRET);
+    if (decoded) {
+      req.body.userId = decoded.id;
+      next();
+    } else {
+      res.status(401).send({
+        message: "Token is invalid or has expired",
+        success: false,
+      });
+    }
+  } catch (error) {
+    console.log("🚀 ~ protect ~ error:", error);
+    res.status(500).send({
+      message: "Auth error",
+      success: false,
+    });
   }
 };
 
-module.exports = { AuthMiddleware };
+module.exports = protect;

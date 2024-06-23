@@ -5,15 +5,17 @@ const {
   getPizzas,
   deletePizza,
   updatePizza,
+  categoryPizza,
 } = require("../Controllers/PizzaController");
-const { AuthMiddleware } = require("../Middleware/AuthMiddleware");
+const protect = require("../Middleware/AuthMiddleware");
 
 router = exporess.Router();
 
-router.get("/getPizzas", getPizzas);
+router.get("/get-pizza", getPizzas);
 router.get("/getPizza/:id", getPizza);
-router.post("/createPizza", AuthMiddleware, createPizza);
-router.delete("/deletePizza/:id", AuthMiddleware, deletePizza);
-router.put("/updatePizza/:id", AuthMiddleware, updatePizza);
+router.post("/addFood", protect, createPizza);
+router.delete("/deletePizza/:id", protect, deletePizza);
+router.put("/updatePizza/:id", protect, updatePizza);
+router.get("/getAllFood", categoryPizza);
 
 module.exports = router;
