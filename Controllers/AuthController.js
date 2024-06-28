@@ -40,7 +40,8 @@ const login = async (req, res) => {
         _id: user._id,
         name: user.name,
         email: user.email,
-        role: user.role,
+        surName: user.surName,
+        image: user.image,
       },
       token,
     });
@@ -51,7 +52,7 @@ const login = async (req, res) => {
 };
 
 const register = async (req, res) => {
-  const { name, surName, email, password, passwordConfirm } = req.body;
+  const { name, surName, email, password, passwordConfirm, image } = req.body;
   try {
     const errors = [];
     if (!name) {
@@ -88,6 +89,7 @@ const register = async (req, res) => {
       surName,
       password,
       passwordConfirm,
+      image,
     });
 
     const users = await newUser.save();

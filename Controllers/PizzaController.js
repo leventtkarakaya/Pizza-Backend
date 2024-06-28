@@ -39,7 +39,6 @@ const createPizza = async (req, res) => {
 const getPizza = async (req, res) => {
   try {
     const { id } = req.params;
-    console.log("🚀 ~ getPizza ~ id:", id);
     const pizza = await Pizza.findById(id);
     if (pizza === null) {
       return res
@@ -154,6 +153,17 @@ const categoryPizza = async (req, res) => {
   }
 };
 
+const favoritePizza = async (req, res) => {
+  try {
+    const pizza = await Pizza.find().sort({ createdAt: -1 }).limit(5);
+    console.log(pizza);
+    res.status(200).json({ message: "favori pizzalar", pizza, success: true });
+  } catch (error) {
+    console.log("🚀 ~ favoritePizza ~ error:", error);
+    res.status(500).json({ message: error });
+  }
+};
+
 module.exports = {
   createPizza,
   getPizza,
@@ -161,4 +171,5 @@ module.exports = {
   deletePizza,
   updatePizza,
   categoryPizza,
+  favoritePizza,
 };
