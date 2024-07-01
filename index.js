@@ -3,6 +3,7 @@ const cors = require("cors");
 const helmet = require("helmet");
 const dotenv = require("dotenv");
 const DB = require("./Config/DataBase");
+
 dotenv.config();
 
 const app = express();
@@ -10,14 +11,22 @@ const app = express();
 DB();
 
 app.use(
-  cors({
-    origin: "http://localhost:3000",
-    credentials: true,
+  helmet({
+    crossOriginResourcePolicy: false,
+    crossOriginEmbedderPolicy: false,
+    crossOriginOpenerPolicy: false,
   })
 );
 app.use(
-  helmet({
-    crossOriginResourcePolicy: false,
+  cors({
+    origin: ["http://localhost:3000"],
+
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true,
+    optionsSuccessStatus: 200,
+    preflightContinue: true,
+    maxAge: 3600,
   })
 );
 app.use(express.json({ limit: "20mb", extended: true }));
