@@ -1,4 +1,5 @@
 const Pizza = require("../Models/Pizza");
+const User = require("../Models/User");
 const dotenv = require("dotenv");
 dotenv.config();
 
@@ -164,6 +165,37 @@ const favoritePizza = async (req, res) => {
   }
 };
 
+const locationPizza = async (req, res) => {
+  try {
+    const { _id, province, district, neighbourhood, apartment, email, phone } =
+      req.body;
+    const user = await User.findById(_id);
+    console.log("🚀 ~ locationPizza ~ user:", user);
+    if (!user) {
+      return res
+        .status(404)
+        .json({ message: "Kullanıcı bulunamadı", success: false });
+    }
+    if (!province || !district || !neighbourhood || !apartment || !email) {
+      return res.status(400).json({ message: "Eksik bilgi", success: false });
+    }
+    user.province = province || user.province;
+    user.district = district || user.district;
+    user.neighbourhood = neighbourhood || user.neighbourhood;
+    user.apartment = apartment || user.apartment;
+    user.email = email || user.email;
+    user.phone = phone || user.phone;
+
+    await user.save();
+    res
+      .status(200)
+      .json({ message: "Adres bilgileri güncellendi", success: true });
+  } catch (error) {
+    console.log("🚀 ~ locationPizza ~ error:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
 module.exports = {
   createPizza,
   getPizza,
@@ -172,4 +204,5 @@ module.exports = {
   updatePizza,
   categoryPizza,
   favoritePizza,
+  locationPizza,
 };

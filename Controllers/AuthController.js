@@ -143,23 +143,30 @@ const getUser = async (req, res) => {
 };
 
 const userUpdate = async (req, res) => {
-  const { userId } = req.body;
   try {
-    const user = await User.findById(userId);
+    const { userId, name, surName, email, password, passwordConfirm } =
+      req.body;
+    const user = await User.findOne({ email });
     if (!user) {
       return res
         .status(404)
         .json({ message: "Kullanıcı bulunamadı", success: false });
-    } else {
-      return res.status(200).json({
-        message: "Kullanıcı bilgileri getirildi",
-        user,
-        success: true,
-      });
     }
+    if (name) user.name = name;
+    if (userId) user._id = userId;
+    if (surName) user.surName = surName;
+    if (email) user.email = email;
+    if (password) user.password = password;
+    if (passwordConfirm) user.passwordConfirm = passwordConfirm;
+    const users = await user.save();
+    res.status(200).json({
+      message: "Kullanıcı bilgileri güncellendi",
+      users,
+      success: true,
+    });
   } catch (error) {
     console.log("🚀 ~ getUser ~ error:", error);
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
-module.exports = { login, register, getUser };
+module.exports = { login, register, getUser, userUpdate };

@@ -2,15 +2,40 @@ const mongoose = require("mongoose");
 const validator = require("validator");
 const bcrypt = require("bcryptjs");
 
+const UserAdress = new mongoose.Schema(
+  {
+    province: {
+      type: String,
+    },
+    district: {
+      type: String,
+    },
+    neighbourhood: {
+      type: String,
+    },
+    apartment: {
+      type: String,
+    },
+    email: {
+      type: String,
+    },
+    phone: {
+      type: String,
+    },
+  },
+  {
+    timestamps: true,
+    versionKey: false,
+  }
+);
+
 const User = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: true,
     },
     surName: {
       type: String,
-      required: true,
     },
     email: {
       type: String,
@@ -23,13 +48,11 @@ const User = new mongoose.Schema(
     },
     password: {
       type: String,
-      required: true,
       min: 6,
       max: 32,
     },
     passwordConfirm: {
       type: String,
-      required: true,
     },
     role: {
       type: String,
@@ -43,18 +66,14 @@ const User = new mongoose.Schema(
       type: Date,
       default: Date.now(),
     },
+    adress: [UserAdress],
   },
   {
     timestamps: true,
     toJSON: { virtuals: true },
+    toObject: { virtuals: true },
     versionKey: false,
   }
 );
-User.pre("save", async function (next) {
-  const salt = await bcrypt.genSalt(10);
-  this.password = await bcrypt.hash(this.password, salt);
-  this.passwordConfirm = undefined;
-  next();
-});
 
-module.exports = mongoose.model("User", User);
+module.exports = mongoose.model("User", User, "users");

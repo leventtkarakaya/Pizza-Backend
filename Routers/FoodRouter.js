@@ -7,6 +7,7 @@ const {
   updatePizza,
   categoryPizza,
   favoritePizza,
+  locationPizza,
 } = require("../Controllers/PizzaController");
 const protect = require("../Middleware/AuthMiddleware");
 
@@ -19,4 +20,5 @@ router.delete("/deletePizza/:id", protect, deletePizza);
 router.put("/updatePizza/:id", protect, updatePizza);
 router.get("/getAllFood", categoryPizza);
 router.get("/favoritepizza", favoritePizza);
+router.post("/order", locationPizza);
 module.exports = router;
