@@ -16,6 +16,7 @@ const Order = new mongoose.Schema(
         quantity: {
           type: Number,
           required: true,
+          min: 1,
         },
       },
     ],
@@ -25,7 +26,7 @@ const Order = new mongoose.Schema(
     },
     payment: {
       type: Boolean,
-      required: true,
+      default: false,
     },
     status: {
       type: String,

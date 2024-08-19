@@ -66,7 +66,8 @@ const getPizzas = async (req, res) => {
       .json({ pizza, success: true, message: "Pizzalar getirildi" });
   } catch (error) {
     console.log("🚀 ~ getPizzas ~ error:", error);
-    res.status(500).json({ message: "getPizzas hata" });
+
+    res.status(500).json({ message: "getPizzas hata", success: false });
   }
 };
 

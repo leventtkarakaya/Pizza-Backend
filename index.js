@@ -39,10 +39,12 @@ app.get("/", (req, res) => {
 const authRouter = require("./Routers/AuthRouter");
 const pizzaRouter = require("./Routers/FoodRouter");
 const imageRouter = require("./Routers/ImageRouter");
+const orderRouter = require("./Routers/Order");
 
 app.use("/api/auth", authRouter);
 app.use("/api/pizza", pizzaRouter);
 app.use("/api/v1/image", imageRouter);
+app.use("/api/order", orderRouter);
 
 const PORT = process.env.PORT;
 
